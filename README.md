@@ -1,19 +1,23 @@
-# Canopée
+# Canopée — V2 (MVC)
 
-Site d'actualités en PHP. Affiche des articles classés par catégories.
+Site d'actualités en PHP avec architecture MVC.
+
+## Structure
+
+- `index.php` — contrôleur (décide quelle page afficher)
+- `models/` — classes Article et Categorie (requêtes SQL)
+- `views/` — fichiers HTML
+- `config/db.php` — connexion à la base
+- `fonctions.php` — petites fonctions utiles
 
 ## Installation
 
 1. Importer `database/schema.sql` dans phpMyAdmin
-2. Connexion MySQL :
-   - base : `mglsi_news`
-   - utilisateur : `mglsi_user`
-   - mot de passe : `passer`
+2. Connexion : `mglsi_news` / `mglsi_user` / `passer`
 3. Ouvrir : http://localhost/mglsi_news/
 
-## Branches
+## URLs
 
-- `v1` — version sans MVC (chaque page fait SQL + HTML)
-- `v2` — version avec MVC (models / views / index.php)
-
-Repo : https://github.com/mohamdoul-haphase-ba/Ingenierie-logicielle
+- Accueil : `index.php`
+- Article : `index.php?route=article&id=3`
+- Catégorie : `index.php?route=categorie&id=2`

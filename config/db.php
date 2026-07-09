@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Connexion PDO — une seule fonction, pas de classe.
- * Chaque page appelle getConnection() directement.
- */
 function getConnection(): PDO
 {
     static $pdo = null;

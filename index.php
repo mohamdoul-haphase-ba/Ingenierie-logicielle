@@ -1,60 +1,75 @@
 <?php
-/**
- * V1 — Page d'accueil (SANS MVC)
- * Tout est dans ce fichier : connexion BDD, requêtes SQL, affichage HTML.
- */
 
 require_once __DIR__ . '/config/db.php';
-require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/models/Article.php';
+require_once __DIR__ . '/models/Categorie.php';
+require_once __DIR__ . '/fonctions.php';
 
-$pdo = getConnection();
+$articleModel   = new Article();
+$categorieModel = new Categorie();
+$categories     = $categorieModel->findAll();
 
-// Requête pour le menu
-$categories = $pdo->query('SELECT * FROM Categorie')->fetchAll();
+$route = $_GET['route'] ?? 'accueil';
 
-// Requête pour les articles (avec jointure catégorie)
-$sql = 'SELECT a.id, a.titre, a.contenu, a.dateCreation,
-               c.id AS categorieId, c.libelle AS categorieLibelle
-        FROM Article a
-        INNER JOIN Categorie c ON a.categorie = c.id
-        ORDER BY a.dateCreation DESC';
-$articles = $pdo->query($sql)->fetchAll();
+// --- Accueil ---
+if ($route === 'accueil') {
+    $articles        = $articleModel->findAllWithCategorie();
+    $pageTitle       = 'Canopée — Accueil';
+    $categorieActive = null;
 
-$pageTitle       = 'Canopée — Accueil';
-$categorieActive = null;
+    require 'views/header.php';
+    require 'views/accueil.php';
+    require 'views/footer.php';
+    exit;
+}
 
-require_once __DIR__ . '/includes/header.php';
-?>
+// --- Article ---
+if ($route === 'article') {
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    if (!$id) {
+        header('Location: index.php');
+        exit;
+    }
 
-<section class="page-header">
-    <p class="page-eyebrow">Dernières actualités</p>
-    <h1 class="page-title">À la une</h1>
-</section>
+    $article = $articleModel->findByIdWithCategorie($id);
+    if (!$article) {
+        header('Location: index.php');
+        exit;
+    }
 
-<?php if (empty($articles)): ?>
-    <div class="empty-state">
-        <p>Aucun article disponible pour le moment.</p>
-    </div>
-<?php else: ?>
-    <div class="articles-grid">
-        <?php foreach ($articles as $article): ?>
-            <article class="article-card">
-                <a href="categorie.php?id=<?= $article['categorieId'] ?>" class="badge">
-                    <?= e($article['categorieLibelle']) ?>
-                </a>
-                <h2 class="article-card__title">
-                    <a href="article.php?id=<?= $article['id'] ?>"><?= e($article['titre']) ?></a>
-                </h2>
-                <p class="article-card__excerpt"><?= e(excerpt($article['contenu'])) ?></p>
-                <div class="article-card__footer">
-                    <time class="article-card__date"><?= e(formatDate($article['dateCreation'])) ?></time>
-                    <a href="article.php?id=<?= $article['id'] ?>" class="article-card__link">
-                        Lire la suite →
-                    </a>
-                </div>
-            </article>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+    $pageTitle       = 'Canopée — ' . $article['titre'];
+    $categorieActive = $article['categorieId'];
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+    require 'views/header.php';
+    require 'views/article.php';
+    require 'views/footer.php';
+    exit;
+}
+
+// --- Catégorie ---
+if ($route === 'categorie') {
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    if (!$id) {
+        header('Location: index.php');
+        exit;
+    }
+
+    $categorie = $categorieModel->findById($id);
+    if (!$categorie) {
+        header('Location: index.php');
+        exit;
+    }
+
+    $articles        = $articleModel->findByCategorie($id);
+    $pageTitle       = 'Canopée — ' . $categorie['libelle'];
+    $categorieActive = $categorie['id'];
+
+    require 'views/header.php';
+    require 'views/categorie.php';
+    require 'views/footer.php';
+    exit;
+}
+
+// --- Page inconnue ---
+header('Location: index.php');
+exit;

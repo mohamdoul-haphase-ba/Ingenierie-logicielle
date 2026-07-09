@@ -1,16 +1,9 @@
-<?php
-/**
- * V1 — Header commun
- * Les variables $pageTitle, $categorieActive et $categories
- * doivent être définies par chaque page AVANT l'inclusion.
- */
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($pageTitle ?? 'Canopée') ?></title>
+    <title><?= e($pageTitle) ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,15 +27,15 @@
             </span>
         </a>
 
-        <button class="nav-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
+        <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false">
             <span></span><span></span><span></span>
         </button>
 
-        <nav class="nav" aria-label="Navigation principale">
-            <a href="index.php" class="nav-link<?= ($categorieActive ?? null) === null ? ' is-active' : '' ?>">Accueil</a>
+        <nav class="nav">
+            <a href="index.php" class="nav-link<?= $categorieActive === null ? ' is-active' : '' ?>">Accueil</a>
             <?php foreach ($categories as $cat): ?>
-                <a href="categorie.php?id=<?= $cat['id'] ?>"
-                   class="nav-link<?= ($categorieActive ?? null) == $cat['id'] ? ' is-active' : '' ?>">
+                <a href="index.php?route=categorie&id=<?= $cat['id'] ?>"
+                   class="nav-link<?= $categorieActive == $cat['id'] ? ' is-active' : '' ?>">
                     <?= e($cat['libelle']) ?>
                 </a>
             <?php endforeach; ?>

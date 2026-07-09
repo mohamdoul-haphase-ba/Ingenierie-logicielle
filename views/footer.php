@@ -2,15 +2,15 @@
 
 <footer class="site-footer">
     <div class="container">
-        <p>&copy; <?= date('Y') ?> Canopée — L'actualité au naturel</p>
+        <p>&copy; <?= date('Y') ?> Canopée</p>
     </div>
 </footer>
 
 <script>
 document.querySelector('.nav-toggle')?.addEventListener('click', function () {
     const nav = document.querySelector('.nav');
-    const expanded = this.getAttribute('aria-expanded') === 'true';
-    this.setAttribute('aria-expanded', String(!expanded));
+    const ouvert = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!ouvert));
     nav.classList.toggle('is-open');
     this.classList.toggle('is-open');
 });
