@@ -1,0 +1,15 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# Config locale (si tu changes les mots de passe)
+# v1/config/db.local.php
+# v2/config/db.local.php
